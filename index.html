@@ -1,0 +1,530 @@
+Below is a complete **single-page HTML dashboard** for the **Smart Energy Consumption and Utility Management Platform**. It includes electricity, water, and gas monitoring, consumption statistics, alerts, customer information, and a dashboard layout.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Energy & Utility Management</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f4f7f6;
+    color:#222;
+}
+
+header{
+    background:#0b6b50;
+    color:white;
+    padding:18px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+header h1{
+    font-size:24px;
+}
+
+header span{
+    font-size:14px;
+}
+
+.container{
+    display:flex;
+    min-height:calc(100vh - 70px);
+}
+
+.sidebar{
+    width:230px;
+    background:#123d32;
+    color:white;
+    padding:25px 15px;
+}
+
+.sidebar h2{
+    text-align:center;
+    margin-bottom:25px;
+    font-size:20px;
+}
+
+.sidebar a{
+    display:block;
+    color:white;
+    text-decoration:none;
+    padding:14px 15px;
+    margin:6px 0;
+    border-radius:6px;
+}
+
+.sidebar a:hover{
+    background:#0b6b50;
+}
+
+.main{
+    flex:1;
+    padding:30px;
+}
+
+.welcome{
+    margin-bottom:25px;
+}
+
+.welcome h2{
+    color:#123d32;
+    margin-bottom:5px;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.card{
+    background:white;
+    padding:22px;
+    border-radius:10px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.08);
+}
+
+.card h3{
+    font-size:15px;
+    color:#666;
+    margin-bottom:12px;
+}
+
+.card .value{
+    font-size:27px;
+    font-weight:bold;
+    color:#0b6b50;
+}
+
+.card p{
+    margin-top:8px;
+    font-size:13px;
+    color:#777;
+}
+
+.section{
+    background:white;
+    padding:25px;
+    border-radius:10px;
+    margin-bottom:25px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.08);
+}
+
+.section h2{
+    margin-bottom:20px;
+    color:#123d32;
+}
+
+.utility-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.utility{
+    padding:20px;
+    border-radius:8px;
+    border-left:5px solid #0b6b50;
+    background:#f7faf9;
+}
+
+.utility h3{
+    margin-bottom:10px;
+}
+
+.progress{
+    height:10px;
+    background:#ddd;
+    border-radius:10px;
+    overflow:hidden;
+    margin:12px 0;
+}
+
+.progress-bar{
+    height:100%;
+    background:#0b6b50;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+table th,
+table td{
+    padding:14px;
+    text-align:left;
+    border-bottom:1px solid #ddd;
+}
+
+table th{
+    background:#eef5f2;
+    color:#123d32;
+}
+
+.status{
+    padding:6px 10px;
+    border-radius:15px;
+    font-size:12px;
+}
+
+.normal{
+    background:#d9f5e9;
+    color:#087443;
+}
+
+.warning{
+    background:#fff0c7;
+    color:#9b6900;
+}
+
+.danger{
+    background:#ffdede;
+    color:#b00000;
+}
+
+.chart{
+    display:flex;
+    align-items:flex-end;
+    gap:25px;
+    height:220px;
+    padding:20px;
+    border-left:1px solid #ddd;
+    border-bottom:1px solid #ddd;
+}
+
+.bar{
+    width:45px;
+    background:#0b6b50;
+    border-radius:5px 5px 0 0;
+    position:relative;
+}
+
+.bar span{
+    position:absolute;
+    bottom:-25px;
+    left:8px;
+    font-size:12px;
+}
+
+.alert{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px;
+    margin-bottom:10px;
+    border-radius:7px;
+    background:#fff5d8;
+    border-left:5px solid #e2a900;
+}
+
+footer{
+    text-align:center;
+    padding:20px;
+    color:#777;
+    font-size:13px;
+}
+
+@media(max-width:900px){
+    .cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .utility-grid{
+        grid-template-columns:1fr;
+    }
+
+    .sidebar{
+        width:180px;
+    }
+}
+
+@media(max-width:600px){
+    .container{
+        flex-direction:column;
+    }
+
+    .sidebar{
+        width:100%;
+    }
+
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    .main{
+        padding:15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>⚡ Smart Energy & Utility Management</h1>
+    <span>Admin Dashboard | Smart City</span>
+</header>
+
+<div class="container">
+
+<aside class="sidebar">
+    <h2>SMART CITY</h2>
+
+    <a href="#">📊 Dashboard</a>
+    <a href="#">⚡ Energy Monitoring</a>
+    <a href="#">💧 Water Management</a>
+    <a href="#">🔥 Gas Monitoring</a>
+    <a href="#">👥 Customers</a>
+    <a href="#">🚨 Alerts</a>
+    <a href="#">📈 Reports</a>
+    <a href="#">⚙ Settings</a>
+</aside>
+
+<main class="main">
+
+<div class="welcome">
+    <h2>Utility Management Dashboard</h2>
+    <p>Monitor electricity, water and gas consumption across the smart city.</p>
+</div>
+
+<div class="cards">
+
+<div class="card">
+    <h3>Total Electricity Consumption</h3>
+    <div class="value">18,450 kWh</div>
+    <p>Today</p>
+</div>
+
+<div class="card">
+    <h3>Water Consumption</h3>
+    <div class="value">12,680 L</div>
+    <p>Today</p>
+</div>
+
+<div class="card">
+    <h3>Gas Consumption</h3>
+    <div class="value">4,250 m³</div>
+    <p>Today</p>
+</div>
+
+<div class="card">
+    <h3>Active Alerts</h3>
+    <div class="value">07</div>
+    <p>Requires attention</p>
+</div>
+
+</div>
+
+<div class="section">
+
+<h2>Utility Consumption Overview</h2>
+
+<div class="utility-grid">
+
+<div class="utility">
+    <h3>⚡ Electricity</h3>
+    <p>Current Usage: <b>18,450 kWh</b></p>
+
+    <div class="progress">
+        <div class="progress-bar" style="width:75%"></div>
+    </div>
+
+    <p>75% of daily consumption limit</p>
+</div>
+
+<div class="utility">
+    <h3>💧 Water</h3>
+    <p>Current Usage: <b>12,680 L</b></p>
+
+    <div class="progress">
+        <div class="progress-bar" style="width:62%"></div>
+    </div>
+
+    <p>62% of daily consumption limit</p>
+</div>
+
+<div class="utility">
+    <h3>🔥 Gas</h3>
+    <p>Current Usage: <b>4,250 m³</b></p>
+
+    <div class="progress">
+        <div class="progress-bar" style="width:48%"></div>
+    </div>
+
+    <p>48% of daily consumption limit</p>
+</div>
+
+</div>
+</div>
+
+<div class="section">
+
+<h2>Weekly Electricity Consumption</h2>
+
+<div class="chart">
+
+<div class="bar" style="height:120px">
+<span>Mon</span>
+</div>
+
+<div class="bar" style="height:150px">
+<span>Tue</span>
+</div>
+
+<div class="bar" style="height:100px">
+<span>Wed</span>
+</div>
+
+<div class="bar" style="height:170px">
+<span>Thu</span>
+</div>
+
+<div class="bar" style="height:140px">
+<span>Fri</span>
+</div>
+
+<div class="bar" style="height:190px">
+<span>Sat</span>
+</div>
+
+<div class="bar" style="height:160px">
+<span>Sun</span>
+</div>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<h2>Consumption Records</h2>
+
+<table>
+
+<tr>
+<th>Consumer</th>
+<th>Utility</th>
+<th>Consumption</th>
+<th>Sector</th>
+<th>Status</th>
+</tr>
+
+<tr>
+<td>City Residential Zone</td>
+<td>Electricity</td>
+<td>7,850 kWh</td>
+<td>Residential</td>
+<td><span class="status normal">Normal</span></td>
+</tr>
+
+<tr>
+<td>Central Shopping Mall</td>
+<td>Electricity</td>
+<td>5,920 kWh</td>
+<td>Commercial</td>
+<td><span class="status warning">High</span></td>
+</tr>
+
+<tr>
+<td>Industrial Area A</td>
+<td>Water</td>
+<td>8,450 L</td>
+<td>Industrial</td>
+<td><span class="status normal">Normal</span></td>
+</tr>
+
+<tr>
+<td>Manufacturing Unit B</td>
+<td>Gas</td>
+<td>3,850 m³</td>
+<td>Industrial</td>
+<td><span class="status danger">Critical</span></td>
+</tr>
+
+</table>
+
+</div>
+
+<div class="section">
+
+<h2>🚨 Utility Alerts</h2>
+
+<div class="alert">
+    <span>⚠ High electricity consumption detected in Central Shopping Mall.</span>
+    <span class="status warning">Warning</span>
+</div>
+
+<div class="alert">
+    <span>⚠ Abnormal water usage detected in Residential Zone.</span>
+    <span class="status warning">Warning</span>
+</div>
+
+<div class="alert">
+    <span>🔴 Gas consumption exceeded threshold at Manufacturing Unit B.</span>
+    <span class="status danger">Critical</span>
+</div>
+
+</div>
+
+<div class="section">
+
+<h2>Customer & Provider Information</h2>
+
+<table>
+
+<tr>
+<th>Provider</th>
+<th>Total Customers</th>
+<th>Active Services</th>
+<th>System Status</th>
+</tr>
+
+<tr>
+<td>Smart City Energy Provider</td>
+<td>12,450</td>
+<td>11,982</td>
+<td><span class="status normal">Operational</span></td>
+</tr>
+
+<tr>
+<td>City Water Utility</td>
+<td>9,820</td>
+<td>9,610</td>
+<td><span class="status normal">Operational</span></td>
+</tr>
+
+<tr>
+<td>Urban Gas Services</td>
+<td>6,450</td>
+<td>6,210</td>
+<td><span class="status normal">Operational</span></td>
+</tr>
+
+</table>
+
+</div>
+
+<footer>
+    Smart Energy Consumption and Utility Management Platform © 2026
+</footer>
+
+</main>
+</div>
+
+</body>
+</html>
+```
