@@ -1,13 +1,3 @@
-FROM python:3.11-slim
-
-WORKDIR /app
-
-COPY README.txt 
-
-RUN pip install --no-cache-dir -r README.txt
-
-COPY 
-
-EXPOSE 5000
-
-CMD ["python","app.py"]
+FROM nginx:alpine
+COPY index.html /usr/share/nginx/html/index.html
+EXPOSE 80

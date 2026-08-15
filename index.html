@@ -1,6 +1,3 @@
-Below is a complete **single-page HTML dashboard** for the **Smart Energy Consumption and Utility Management Platform**. It includes electricity, water, and gas monitoring, consumption statistics, alerts, customer information, and a dashboard layout.
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -199,6 +196,7 @@ table th{
 .chart{
     display:flex;
     align-items:flex-end;
+    justify-content:space-around;
     gap:25px;
     height:220px;
     padding:20px;
@@ -267,6 +265,18 @@ footer{
 
     .main{
         padding:15px;
+    }
+
+    table{
+        font-size:12px;
+    }
+
+    .chart{
+        gap:8px;
+    }
+
+    .bar{
+        width:30px;
     }
 }
 </style>
@@ -527,4 +537,3 @@ footer{
 
 </body>
 </html>
-```
