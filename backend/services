@@ -1,0 +1,18 @@
+def detect_anomaly(utility_type, value):
+    thresholds = {
+        "Electricity": 500,
+        "Water": 1000,
+        "Gas": 300
+    }
+
+    threshold = thresholds.get(utility_type, 0)
+
+    return value > threshold
+def calculate_total(records):
+    return sum(record["consumption"] for record in records)
+
+def calculate_average(records):
+    if not records:
+        return 0
+
+    return calculate_total(records) / len(records)

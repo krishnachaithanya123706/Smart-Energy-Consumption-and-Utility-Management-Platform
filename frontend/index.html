@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Energy & Utility Management</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>Smart Energy & Utility Management</h1>
+    <p>Monitor Electricity, Water and Gas Consumption</p>
+</header>
+
+<nav>
+    <button onclick="showSection('dashboard')">Dashboard</button>
+    <button onclick="showSection('users')">Users</button>
+    <button onclick="showSection('consumption')">Consumption</button>
+    <button onclick="showSection('anomalies')">Anomalies</button>
+</nav>
+
+<main>
+
+<section id="dashboard" class="section">
+
+    <h2>Dashboard</h2>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Total Users</h3>
+            <p id="totalUsers">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Consumption</h3>
+            <p id="totalConsumption">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Electricity</h3>
+            <p id="electricity">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Water</h3>
+            <p id="water">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Gas</h3>
+            <p id="gas">0</p>
+        </div>
+
+    </div>
+
+</section>
+
+<section id="users" class="section hidden">
+
+    <h2>User Management</h2>
+
+    <form id="userForm">
+
+        <input
+            type="text"
+            id="name"
+            placeholder="User Name"
+            required
+        >
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Email"
+            required
+        >
+
+        <select id="utilityType">
+            <option value="Electricity">Electricity</option>
+            <option value="Water">Water</option>
+            <option value="Gas">Gas</option>
+        </select>
+
+        <button type="submit">Add User</button>
+
+    </form>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Utility</th>
+            </tr>
+        </thead>
+
+        <tbody id="userTable"></tbody>
+
+    </table>
+
+</section>
+
+<section id="consumption" class="section hidden">
+
+    <h2>Consumption Records</h2>
+
+    <form id="consumptionForm">
+
+        <input
+            type="number"
+            id="userId"
+            placeholder="User ID"
+            required
+        >
+
+        <select id="consumptionType">
+            <option value="Electricity">Electricity</option>
+            <option value="Water">Water</option>
+            <option value="Gas">Gas</option>
+        </select>
+
+        <input
+            type="number"
+            id="consumptionValue"
+            placeholder="Consumption"
+            step="0.01"
+            required
+        >
+
+        <input
+            type="date"
+            id="consumptionDate"
+            required
+        >
+
+        <button type="submit">Record Consumption</button>
+
+    </form>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Utility</th>
+                <th>Consumption</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+
+        <tbody id="consumptionTable"></tbody>
+
+    </table>
+
+</section>
+
+<section id="anomalies" class="section hidden">
+
+    <h2>Anomaly Detection</h2>
+
+    <button onclick="loadAnomalies()">
+        Detect Anomalies
+    </button>
+
+    <div id="anomalyResults"></div>
+
+</section>
+
+</main>
+
+<script src="js/app.js"></script>
+
+</body>
+</html>
