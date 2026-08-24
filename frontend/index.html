@@ -4,176 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Energy & Utility Management</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-
-<header>
-    <h1>Smart Energy & Utility Management</h1>
-    <p>Monitor Electricity, Water and Gas Consumption</p>
+<header class="site-header">
+    <h1>Smart Energy Consumption and Utility Management Platform</h1>
+    <p>Smart City Utility Monitoring Dashboard</p>
 </header>
-
-<nav>
-    <button onclick="showSection('dashboard')">Dashboard</button>
-    <button onclick="showSection('users')">Users</button>
-    <button onclick="showSection('consumption')">Consumption</button>
-    <button onclick="showSection('anomalies')">Anomalies</button>
-</nav>
-
-<main>
-
-<section id="dashboard" class="section">
-
-    <h2>Dashboard</h2>
-
-    <div class="cards">
-
-        <div class="card">
-            <h3>Total Users</h3>
-            <p id="totalUsers">0</p>
-        </div>
-
-        <div class="card">
-            <h3>Total Consumption</h3>
-            <p id="totalConsumption">0</p>
-        </div>
-
-        <div class="card">
-            <h3>Electricity</h3>
-            <p id="electricity">0</p>
-        </div>
-
-        <div class="card">
-            <h3>Water</h3>
-            <p id="water">0</p>
-        </div>
-
-        <div class="card">
-            <h3>Gas</h3>
-            <p id="gas">0</p>
-        </div>
-
-    </div>
-
-</section>
-
-<section id="users" class="section hidden">
-
-    <h2>User Management</h2>
-
-    <form id="userForm">
-
-        <input
-            type="text"
-            id="name"
-            placeholder="User Name"
-            required
-        >
-
-        <input
-            type="email"
-            id="email"
-            placeholder="Email"
-            required
-        >
-
-        <select id="utilityType">
-            <option value="Electricity">Electricity</option>
-            <option value="Water">Water</option>
-            <option value="Gas">Gas</option>
-        </select>
-
-        <button type="submit">Add User</button>
-
-    </form>
-
-    <table>
-
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Utility</th>
-            </tr>
-        </thead>
-
-        <tbody id="userTable"></tbody>
-
-    </table>
-
-</section>
-
-<section id="consumption" class="section hidden">
-
-    <h2>Consumption Records</h2>
-
-    <form id="consumptionForm">
-
-        <input
-            type="number"
-            id="userId"
-            placeholder="User ID"
-            required
-        >
-
-        <select id="consumptionType">
-            <option value="Electricity">Electricity</option>
-            <option value="Water">Water</option>
-            <option value="Gas">Gas</option>
-        </select>
-
-        <input
-            type="number"
-            id="consumptionValue"
-            placeholder="Consumption"
-            step="0.01"
-            required
-        >
-
-        <input
-            type="date"
-            id="consumptionDate"
-            required
-        >
-
-        <button type="submit">Record Consumption</button>
-
-    </form>
-
-    <table>
-
-        <thead>
-            <tr>
-                <th>User</th>
-                <th>Utility</th>
-                <th>Consumption</th>
-                <th>Date</th>
-            </tr>
-        </thead>
-
-        <tbody id="consumptionTable"></tbody>
-
-    </table>
-
-</section>
-
-<section id="anomalies" class="section hidden">
-
-    <h2>Anomaly Detection</h2>
-
-    <button onclick="loadAnomalies()">
-        Detect Anomalies
-    </button>
-
-    <div id="anomalyResults"></div>
-
-</section>
-
+<main class="dashboard">
+    <section class="metric-grid" aria-label="Consumption summary">
+        <article class="metric-card"><h2>Total Consumption</h2><p id="total">0.00</p></article>
+        <article class="metric-card"><h2>Electricity</h2><p id="electricity">0.00</p></article>
+        <article class="metric-card"><h2>Water</h2><p id="water">0.00</p></article>
+        <article class="metric-card"><h2>Gas</h2><p id="gas">0.00</p></article>
+    </section>
+    <section class="record-panel">
+        <h2>Add Consumption Record</h2>
+        <form id="consumptionForm" class="record-form">
+            <input type="text" id="consumer" placeholder="Consumer Name" required>
+            <select id="utility" required><option value="" disabled selected>Select Utility</option><option>Electricity</option><option>Water</option><option>Gas</option></select>
+            <input type="number" id="consumption" placeholder="Consumption" step="0.01" min="0" required>
+            <input type="text" id="unit" placeholder="Unit" required>
+            <input type="date" id="date" required>
+            <button type="submit">Add Record</button>
+        </form>
+    </section>
+    <section class="records-panel">
+        <h2>Recent Consumption Records</h2>
+        <div class="table-wrap"><table><thead><tr><th>ID</th><th>Consumer</th><th>Utility</th><th>Consumption</th><th>Unit</th><th>Date</th></tr></thead><tbody id="records"></tbody></table></div>
+    </section>
 </main>
-
-<script src="js/app.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>
