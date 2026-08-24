@@ -1,8 +1,10 @@
 from flask import Flask, jsonify, request, send_from_directory
+from flask_cors import CORS
 import sqlite3
 import os
 
 app = Flask(__name__, static_folder="../frontend")
+CORS(app)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "database", "utility.db")
@@ -43,7 +45,15 @@ init_db()
 
 @app.route("/")
 def home():
-    return send_from_directory("../frontend", "index.html")
+    if os.path.exists(os.path.join(app.static_folder, "index.html")):
+        return send_from_directory(app.static_folder, "index.html")
+    return jsonify({"status": "healthy", "service": "Smart Energy Management API"}), 200
+
+@app.route("/<path:filename>")
+def serve_static(filename):
+    if not filename.startswith("api/") and os.path.exists(os.path.join(app.static_folder, filename)):
+        return send_from_directory(app.static_folder, filename)
+    return jsonify({"error": "Resource not found"}), 404
 
 @app.route("/api/users", methods=["GET"])
 def get_users():

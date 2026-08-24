@@ -1,0 +1,95 @@
+pipeline {
+    agent any
+
+    triggers {
+        pollSCM('H/5 * * * *')
+    }
+
+    environment {
+        COMPOSE_FILE = 'docker-compose.yml'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo 'Checking out Smart Energy project...'
+                checkout scm
+            }
+        }
+
+        stage('Verify Files') {
+            steps {
+                sh '''
+                    echo "Project files:"
+                    ls -la
+                    echo "Backend:"
+                    ls -la backend
+                    echo "Frontend:"
+                    ls -la frontend
+                '''
+            }
+        }
+
+        stage('Docker Check') {
+            steps {
+                sh '''
+                    docker --version
+                    docker compose version
+                '''
+            }
+        }
+
+        stage('Build Docker Images') {
+            steps {
+                sh '''
+                    docker compose -f ${COMPOSE_FILE} build
+                '''
+            }
+        }
+
+        stage('Start Application') {
+            steps {
+                sh '''
+                    docker compose -f ${COMPOSE_FILE} up -d
+                '''
+            }
+        }
+
+        stage('Check Containers') {
+            steps {
+                sh '''
+                    docker compose -f ${COMPOSE_FILE} ps
+                '''
+            }
+        }
+
+        stage('Application Test') {
+            steps {
+                sh '''
+                    sleep 10
+                    docker compose -f ${COMPOSE_FILE} ps
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Smart Energy application deployed successfully!'
+        }
+
+        failure {
+            echo 'Pipeline failed. Check the Jenkins console output.'
+            sh '''
+                docker compose -f ${COMPOSE_FILE} logs --tail=100 || true
+            '''
+        }
+
+        always {
+            sh '''
+                docker image prune -f || true
+            '''
+        }
+    }
+}
