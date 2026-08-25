@@ -15,7 +15,7 @@ body {
 ========================= */
 
 .header {
-    background: #086b29;
+    background: #0645ad;
     color: #ffffff;
     text-align: center;
     padding: 10px 15px 22px;
@@ -157,7 +157,7 @@ button {
     border: none;
     border-radius: 4px;
 
-    background: #188b2e;
+    background: #0645ad;
     color: #ffffff;
 
     font-size: 11px;
@@ -169,7 +169,7 @@ button {
 }
 
 button:hover {
-    background: #126d24;
+    background: #043580;
 }
 
 /* =========================
