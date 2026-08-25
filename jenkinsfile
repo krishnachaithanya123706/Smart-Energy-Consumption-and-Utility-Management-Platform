@@ -1,0 +1,119 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Verify Checkout') {
+            steps {
+                echo 'Checking out Smart Energy project...'
+                sh '''
+                    echo "======================================"
+                    echo "PROJECT FILES"
+                    echo "======================================"
+                    ls -la
+                '''
+            }
+        }
+
+        stage('Verify Files') {
+            steps {
+                echo 'Verifying project files...'
+
+                sh '''
+                    test -f Dockerfile && echo "Dockerfile: FOUND" || echo "Dockerfile: NOT FOUND"
+                    test -f docker-compose.yml && echo "docker-compose.yml: FOUND" || echo "docker-compose.yml: NOT FOUND"
+                    test -d frontend && echo "frontend: FOUND" || true
+                    test -d backend && echo "backend: FOUND" || true
+                '''
+            }
+        }
+
+        stage('Docker Check') {
+            steps {
+                echo 'Checking Docker...'
+
+                sh '''
+                    docker --version
+                    docker info
+                    docker compose version
+                '''
+            }
+        }
+
+        stage('Build Docker') {
+            steps {
+                echo 'Building Docker application...'
+
+                sh '''
+                    docker compose build
+                '''
+            }
+        }
+
+        stage('Stop Old Application') {
+            steps {
+                echo 'Stopping old application...'
+
+                sh '''
+                    docker compose down --remove-orphans || true
+                '''
+            }
+        }
+
+        stage('Start Application') {
+            steps {
+                echo 'Starting Smart Energy application...'
+
+                sh '''
+                    docker compose up -d
+                '''
+            }
+        }
+
+        stage('Check Containers') {
+            steps {
+                echo 'Checking running containers...'
+
+                sh '''
+                    docker compose ps
+                    docker ps
+                '''
+            }
+        }
+
+        stage('Application Test') {
+            steps {
+                echo 'Testing application...'
+
+                sh '''
+                    sleep 10
+                    docker compose ps
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '''
+========================================
+       DEPLOYMENT SUCCESSFUL
+========================================
+Smart Energy application deployed.
+'''
+        }
+
+        failure {
+            echo '''
+========================================
+       DEPLOYMENT FAILED
+========================================
+Check the failed Jenkins stage.
+'''
+        }
+
+        always {
+            echo 'Pipeline execution completed.'
+        }
+    }
+}
