@@ -3,14 +3,15 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
+        stage('Verify Checkout') {
             steps {
                 echo 'Checking out Smart Energy project...'
-
-                git(
-                    branch: 'develop',
-                    url: 'https://github.com/krishnachaithanya123706/Smart-Energy-Consumption-and-Utility-Management-Platform.git'
-                )
+                sh '''
+                    echo "======================================"
+                    echo "PROJECT FILES"
+                    echo "======================================"
+                    ls -la
+                '''
             }
         }
 
@@ -19,35 +20,10 @@ pipeline {
                 echo 'Verifying project files...'
 
                 sh '''
-                    echo "======================================"
-                    echo "PROJECT FILES"
-                    echo "======================================"
-
-                    ls -la
-
-                    echo "Checking required files..."
-
-                    if [ -f Dockerfile ]; then
-                        echo "Dockerfile: FOUND"
-                    else
-                        echo "Dockerfile: NOT FOUND"
-                    fi
-
-                    if [ -f docker-compose.yml ]; then
-                        echo "docker-compose.yml: FOUND"
-                    else
-                        echo "docker-compose.yml: NOT FOUND"
-                    fi
-
-                    if [ -d frontend ]; then
-                        echo "frontend: FOUND"
-                    fi
-
-                    if [ -d backend ]; then
-                        echo "backend: FOUND"
-                    fi
-
-                    echo "Verify Files completed."
+                    test -f Dockerfile && echo "Dockerfile: FOUND" || echo "Dockerfile: NOT FOUND"
+                    test -f docker-compose.yml && echo "docker-compose.yml: FOUND" || echo "docker-compose.yml: NOT FOUND"
+                    test -d frontend && echo "frontend: FOUND" || true
+                    test -d backend && echo "backend: FOUND" || true
                 '''
             }
         }
@@ -57,21 +33,9 @@ pipeline {
                 echo 'Checking Docker...'
 
                 sh '''
-                    if command -v docker >/dev/null 2>&1; then
-                        echo "Docker CLI found."
-                        docker --version
-
-                        if docker info >/dev/null 2>&1; then
-                            echo "Docker connection successful."
-                        else
-                            echo "Docker CLI found but Docker daemon is unavailable."
-                        fi
-                    else
-                        echo "Docker CLI is not available in Jenkins."
-                        echo "Continuing pipeline without Docker execution."
-                    fi
-
-                    exit 0
+                    docker --version
+                    docker info
+                    docker compose version
                 '''
             }
         }
@@ -81,22 +45,7 @@ pipeline {
                 echo 'Building Docker application...'
 
                 sh '''
-                    if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
-
-                        echo "Building Docker containers..."
-
-                        if docker compose version >/dev/null 2>&1; then
-                            docker compose build
-                        else
-                            echo "Docker Compose is not available."
-                        fi
-
-                    else
-                        echo "Docker is unavailable."
-                        echo "Docker build skipped."
-                    fi
-
-                    exit 0
+                    docker compose build
                 '''
             }
         }
@@ -106,20 +55,7 @@ pipeline {
                 echo 'Stopping old application...'
 
                 sh '''
-                    if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
-
-                        if docker compose version >/dev/null 2>&1; then
-                            docker compose down --remove-orphans || true
-                        else
-                            echo "Docker Compose unavailable."
-                        fi
-
-                    else
-                        echo "Docker unavailable."
-                        echo "Stop operation skipped."
-                    fi
-
-                    exit 0
+                    docker compose down --remove-orphans || true
                 '''
             }
         }
@@ -129,44 +65,18 @@ pipeline {
                 echo 'Starting Smart Energy application...'
 
                 sh '''
-                    if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
-
-                        if docker compose version >/dev/null 2>&1; then
-                            docker compose up -d
-                        else
-                            echo "Docker Compose unavailable."
-                        fi
-
-                    else
-                        echo "Docker unavailable."
-                        echo "Application start skipped."
-                    fi
-
-                    exit 0
+                    docker compose up -d
                 '''
             }
         }
 
         stage('Check Containers') {
             steps {
-                echo 'Checking containers...'
+                echo 'Checking running containers...'
 
                 sh '''
-                    if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
-
-                        echo "Running containers:"
-                        docker ps
-
-                        if docker compose version >/dev/null 2>&1; then
-                            docker compose ps
-                        fi
-
-                    else
-                        echo "Docker unavailable."
-                        echo "Container check skipped."
-                    fi
-
-                    exit 0
+                    docker compose ps
+                    docker ps
                 '''
             }
         }
@@ -176,42 +86,8 @@ pipeline {
                 echo 'Testing application...'
 
                 sh '''
-                    if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
-
-                        if docker compose version >/dev/null 2>&1; then
-                            docker compose ps
-                            echo "Application test completed."
-                        else
-                            echo "Docker Compose unavailable."
-                        fi
-
-                    else
-                        echo "Docker unavailable."
-                        echo "Application test skipped."
-                    fi
-
-                    exit 0
-                '''
-            }
-        }
-
-        stage('Post Actions') {
-            steps {
-                echo 'Deployment process completed.'
-
-                sh '''
-                    echo "======================================"
-                    echo "SMART ENERGY PIPELINE COMPLETED"
-                    echo "======================================"
-                    echo "Checkout              : SUCCESS"
-                    echo "Verify Files          : SUCCESS"
-                    echo "Docker Check          : SUCCESS"
-                    echo "Build Docker          : SUCCESS"
-                    echo "Stop Old Application  : SUCCESS"
-                    echo "Start Application     : SUCCESS"
-                    echo "Check Containers      : SUCCESS"
-                    echo "Application Test      : SUCCESS"
-                    echo "======================================"
+                    sleep 10
+                    docker compose ps
                 '''
             }
         }
@@ -221,17 +97,18 @@ pipeline {
         success {
             echo '''
 ========================================
-       BUILD SUCCESSFUL
+       DEPLOYMENT SUCCESSFUL
 ========================================
-All Jenkins stages completed successfully.
+Smart Energy application deployed.
 '''
         }
 
         failure {
             echo '''
 ========================================
-       BUILD FAILED
+       DEPLOYMENT FAILED
 ========================================
+Check the failed Jenkins stage.
 '''
         }
 
