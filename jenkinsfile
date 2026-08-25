@@ -1,14 +1,6 @@
 pipeline {
     agent any
 
-    triggers {
-        pollSCM('H/5 * * * *')
-    }
-
-    environment {
-        COMPOSE_FILE = 'docker-compose.yml'
-    }
-
     stages {
 
         stage('Checkout') {
@@ -20,76 +12,60 @@ pipeline {
 
         stage('Verify Files') {
             steps {
-                sh '''
-                    echo "Project files:"
-                    ls -la
-                    echo "Backend:"
-                    ls -la backend
-                    echo "Frontend:"
-                    ls -la frontend
-                '''
+                echo 'Verifying project files...'
+                bat 'dir'
             }
         }
 
         stage('Docker Check') {
             steps {
-                sh '''
-                    docker --version
-                    docker compose version
-                '''
+                echo 'Checking Docker...'
+                bat 'docker --version'
             }
         }
 
-        stage('Build Docker Images') {
+        stage('Build Docker') {
             steps {
-                sh '''
-                    docker compose -f ${COMPOSE_FILE} build
-                '''
+                echo 'Building Docker image...'
+                bat 'docker build -t smart-energy-app .'
             }
         }
 
         stage('Start Application') {
             steps {
-                sh '''
-                    docker compose -f ${COMPOSE_FILE} up -d
-                '''
+                echo 'Starting application...'
+                bat 'docker compose up -d'
             }
         }
 
         stage('Check Containers') {
             steps {
-                sh '''
-                    docker compose -f ${COMPOSE_FILE} ps
-                '''
+                echo 'Checking containers...'
+                bat 'docker ps'
             }
         }
 
         stage('Application Test') {
             steps {
-                sh '''
-                    sleep 10
-                    docker compose -f ${COMPOSE_FILE} ps
-                '''
+                echo 'Testing application...'
+                bat 'docker compose ps'
+            }
+        }
+
+        stage('Post Actions') {
+            steps {
+                echo 'Pipeline completed successfully!'
             }
         }
     }
 
     post {
         success {
-            echo 'Smart Energy application deployed successfully!'
+            echo 'BUILD SUCCESSFUL'
         }
 
         failure {
-            echo 'Pipeline failed. Check the Jenkins console output.'
-            sh '''
-                docker compose -f ${COMPOSE_FILE} logs --tail=100 || true
-            '''
-        }
-
-        always {
-            sh '''
-                docker image prune -f || true
-            '''
+            echo 'BUILD FAILED'
         }
     }
 }
