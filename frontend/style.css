@@ -155,7 +155,7 @@ th {
 td {
     padding: 15px 10px;
     font-size: 14px;
-    border-bottom: 1px solid #ededf1;
+    border-bottom: 1px solid #1414f6;
 }
 
 tr:hover {
@@ -207,6 +207,6 @@ tr:hover {
     }
 
     .card {
-        min-height: 120px;
+        min-height: 130px;
     }
 }
